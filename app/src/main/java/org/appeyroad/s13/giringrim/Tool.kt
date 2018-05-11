@@ -9,7 +9,6 @@ enum class Tool {
         override val paint = Paint().apply {
             isAntiAlias = true
             isDither = true
-            color = DEFAULT_COLOR
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
@@ -30,7 +29,6 @@ enum class Tool {
         override val paint = Paint().apply {
             isAntiAlias = true
             isDither = true
-            color = DEFAULT_COLOR
             style = Paint.Style.STROKE
             strokeJoin = Paint.Join.ROUND
             strokeCap = Paint.Cap.ROUND
@@ -61,7 +59,6 @@ enum class Tool {
     private companion object {
 
         const val DEFAULT_WIDTH = 16f
-        const val DEFAULT_COLOR = Color.BLACK
     }
 
     abstract val paint: Paint

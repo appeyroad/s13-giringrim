@@ -4,4 +4,5 @@
     <string name="brush">붓</string>
     <string name="eraser">지우개</string>
     <string name="settings">설정</string>
+    <string name="preview">미리보기</string>
 </resources>

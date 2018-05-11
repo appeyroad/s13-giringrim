@@ -16,7 +16,17 @@ class FingerCanvas : View {
         private const val TOLERANCE = 4
     }
 
-    var tool = Tool.PEN
+    private val prefs = Prefs(context)
+
+    private var _tool = Tool.PEN
+    var tool
+        set(value) {
+            _tool = value
+        }
+        get() = _tool.apply {
+            paint.color = prefs.paintColor
+            paint.strokeWidth = prefs.strokeWidth.toFloat()
+        }
 
     private val prev = object { var x = 0f; var y = 0f }
     private val path = Path()
