@@ -8,30 +8,28 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 
-class FingerCanvas(context: Context) : View(context) {
+class FingerCanvas : View {
 
     companion object {
 
         private val bitmapPaint = Paint(Paint.DITHER_FLAG)
-        private val TOLERANCE = 4
+        private const val TOLERANCE = 4
     }
 
-    constructor(context: Context, attrs: AttributeSet): this(context)
+    var tool = Tool.PEN
 
     private val prev = object { var x = 0f; var y = 0f }
     private val path = Path()
-    private val paint = Paint().apply {
-        isAntiAlias = true
-        isDither = true
-        color = Color.BLACK
-        style = Paint.Style.STROKE
-        strokeJoin = Paint.Join.ROUND
-        strokeCap = Paint.Cap.ROUND
-        strokeWidth = 12f
-    }
 
     private lateinit var bitmap: Bitmap
     private lateinit var canvas: Canvas
+
+    constructor(context: Context): super(context)
+    constructor(context: Context, attrs: AttributeSet): super(context, attrs)
+
+    init {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+    }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
@@ -43,7 +41,7 @@ class FingerCanvas(context: Context) : View(context) {
         canvas.run {
             drawColor(Color.WHITE)
             drawBitmap(bitmap, 0f, 0f, bitmapPaint)
-            drawPath(path, paint)
+            drawPath(path, tool.paint)
         }
     }
 
@@ -53,9 +51,9 @@ class FingerCanvas(context: Context) : View(context) {
         val y = event.y
 
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> onTouchStart(x, y)
+            MotionEvent.ACTION_DOWN -> onTouchDown(x, y)
             MotionEvent.ACTION_MOVE -> onTouchMove(x, y)
-            MotionEvent.ACTION_UP -> onTouchDown(x, y)
+            MotionEvent.ACTION_UP -> onTouchUp(x, y)
             else -> return true
         }
         invalidate()
@@ -63,7 +61,7 @@ class FingerCanvas(context: Context) : View(context) {
         return true
     }
 
-    private fun onTouchStart(x: Float, y: Float) {
+    private fun onTouchDown(x: Float, y: Float) {
         path.reset()
         path.moveTo(x, y)
         prev.x = x
@@ -76,14 +74,14 @@ class FingerCanvas(context: Context) : View(context) {
         if (dx < TOLERANCE || dy < TOLERANCE) {
             return
         }
-        path.quadTo(x, y, (x + prev.x) / 2, (y + prev.y) / 2)
+        tool.draw(path, prev.x, prev.y, x, y)
         prev.x = x
         prev.y = y
     }
 
-    private fun onTouchDown(x: Float, y: Float) {
+    private fun onTouchUp(x: Float, y: Float) {
         path.lineTo(x, y)
-        canvas.drawPath(path, paint)
+        canvas.drawPath(path, tool.paint)
         path.reset()
     }
 }

@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">GirinGrim</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">기린그림</string>
+    <string name="pen">펜</string>
+    <string name="brush">붓</string>
+    <string name="eraser">지우개</string>
+    <string name="settings">설정</string>
 </resources>
